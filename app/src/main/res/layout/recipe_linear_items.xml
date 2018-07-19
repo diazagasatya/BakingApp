@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This item will hold the image of the recipe and title -->
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <!-- Will hold the text of recipe & servings -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="vertical">
+
+        <!-- Recipe Name -->
+        <TextView
+            android:id="@+id/tv_recipe_name"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".6"
+            android:gravity="center"
+            android:text="@string/recipe_name"
+            android:textSize="30sp"
+            style="@style/Base.TextAppearance.AppCompat.Title"/>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_margin="2dp"
+            android:background="@color/lightGrey"></View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".3"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <!-- Serving Label & Size -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/serving_label"
+                android:gravity="center"
+                android:padding="8dp"
+                android:textStyle="italic"/>
+            <TextView
+                android:id="@+id/tv_servings"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/serving_size"
+                android:gravity="center"
+                android:textStyle="italic"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>
