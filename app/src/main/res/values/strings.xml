@@ -5,4 +5,8 @@
     <string name="serving_size">Serving Size</string>
     <string name="recipe_ingredients_label">Recipe Ingredients</string>
     <string name="recipe_short_description">Recipe Description</string>
+    <string name="recipe_steps_label">Recipe Steps</string>
+    <string name="recipe_item">Recipe Item Ingredient Name</string>
+    <string name="recipe_unit">gram</string>
+    <string name="recipe_quantity">20</string>
 </resources>

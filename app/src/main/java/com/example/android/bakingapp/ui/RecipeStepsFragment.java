@@ -73,7 +73,7 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepsAdapter.
         // Set the layout of the recipe steps
         mRecipeStepsRv.setLayoutManager(linearLayoutManager);
 
-        // If saved instance state is not null
+        // If saved instance state is null
         // Query the appropriate recipe and parse the steps and ingredients
         if(savedInstanceState == null) {
             getRecipeSteps();
@@ -102,7 +102,7 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepsAdapter.
                     null);
             // Move to first in the cursor and grab the information
             cursor.moveToFirst();
-            System.out.println("HOW MANY ROWS " + cursor.getCount());
+            // System.out.println("HOW MANY ROWS " + cursor.getCount());
 
             // Initialize ArrayList for holding recipe short descriptions
             recipeShortDesc = new ArrayList<>();
