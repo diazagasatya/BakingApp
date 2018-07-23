@@ -22,30 +22,30 @@
             <!-- Recipe Name -->
             <TextView
                 android:id="@+id/tv_recipe_item_name"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/recipe_item"
-                android:layout_weight=".9"
-                android:textSize="16sp"
+                android:layout_weight=".7"
+                android:textSize="14sp"
                 />
             <!-- Recipe Quantity -->
             <TextView
                 android:id="@+id/tv_recipe_quantity"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/recipe_quantity"
-                android:layout_weight=".10"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:gravity="right"
+                android:layout_gravity="right"
                 />
             <!-- Recipe Unit -->
             <TextView
                 android:id="@+id/tv_recipe_unit"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="@string/recipe_unit"
-                android:layout_weight=".15"
-                android:textSize="16sp"
+                android:textSize="14sp"
+                android:layout_gravity="right"
                 android:gravity="right"
                 />
 
