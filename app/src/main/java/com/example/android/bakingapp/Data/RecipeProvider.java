@@ -89,7 +89,7 @@ public class RecipeProvider extends ContentProvider {
                 // Get the id from the Uri
                 String id = uri.getPathSegments().get(1);
                 // Selection is the _ID column = ?, and the selection args = the Row ID
-                String mSelection = "_id=?";
+                String mSelection = "id=?";
                 String[] mSelectionArgs = new String[]{id};
                 // Retrieve the appropriate query
                 resultData = db.query(RecipeContract.RecipeTable.TABLE_NAME,
@@ -99,6 +99,7 @@ public class RecipeProvider extends ContentProvider {
                         null,
                         null,
                         sortOrder);
+                // System.out.println("number of rows query " + resultData.getCount());
                 break;
             default:
                 throw new UnsupportedOperationException("Unkown Uri " + uri);
@@ -142,7 +143,38 @@ public class RecipeProvider extends ContentProvider {
      */
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+
+        int numberOfRowsDeleted;
+
+        // This way the query will delete all rows and return the number of
+        // rows deleted
+        if(selection == null) selection = "1";
+
+        switch (sUriMatcher.match(uri)) {
+
+            case RECIPE_PATH:
+                numberOfRowsDeleted = mRecipeDatabase.getWritableDatabase()
+                        .delete(RecipeContract.RecipeTable.TABLE_NAME,
+                        selection,selectionArgs);
+                break;
+            case RECIPE_PATH_WITH_ID:
+                String id = uri.getPathSegments().get(1);
+                String mSelection = "_id=?";
+                String[] mSelectionArgs = new String[]{id};
+
+                numberOfRowsDeleted = mRecipeDatabase.getWritableDatabase()
+                        .delete(RecipeContract.RecipeTable.TABLE_NAME,
+                                mSelection,mSelectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown Uri " + uri);
+        }
+
+        if(numberOfRowsDeleted != 0) {
+            getContext().getContentResolver().notifyChange(uri,null);
+        }
+        // System.out.println("NUMBER OF ROWS DELETED " + numberOfRowsDeleted);
+        return numberOfRowsDeleted;
     }
 
     /**
@@ -198,6 +230,7 @@ public class RecipeProvider extends ContentProvider {
                 if(numberOfRowsInserted > 0) {
                     getContext().getContentResolver().notifyChange(uri,null);
                 }
+                // System.out.println("NUMBER OF ROWS INSERTED : " + numberOfRowsInserted);
                 return numberOfRowsInserted;
             default:
                 return super.bulkInsert(uri, values);

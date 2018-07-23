@@ -32,7 +32,7 @@ public class RecipeDBHelper extends SQLiteOpenHelper {
         // Create the SQL create table query
         final String CREATE_RECIPE_TABLE = "CREATE TABLE "
                 + RecipeContract.RecipeTable.TABLE_NAME + " ("
-                + RecipeContract.RecipeTable._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + RecipeContract.RecipeTable.COL_ID + " TEXT NOT NULL, "
                 + RecipeContract.RecipeTable.COL_NAME + " TEXT NOT NULL, "
                 + RecipeContract.RecipeTable.COL_INGREDIENTS + " TEXT NOT NULL, "
                 + RecipeContract.RecipeTable.COL_STEPS + " TEXT NOT NULL, "

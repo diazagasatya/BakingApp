@@ -32,6 +32,7 @@ public class RecipeContract {
         // Table name
         public static final String TABLE_NAME = "recipes";
         // Column names
+        public static final String COL_ID = "id";
         public static final String COL_NAME = "name";
         public static final String COL_INGREDIENTS = "ingredients";
         public static final String COL_STEPS = "steps";

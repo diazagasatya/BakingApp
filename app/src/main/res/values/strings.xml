@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">BakingApp</string>
     <string name="recipe_name">Recipe Name</string>
-    <string name="serving_label">Servings :</string>
+    <string name="serving_label">Total Servings :</string>
     <string name="serving_size">Serving Size</string>
+    <string name="recipe_ingredients_label">Recipe Ingredients</string>
+    <string name="recipe_short_description">Recipe Description</string>
 </resources>
