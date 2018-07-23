@@ -1,5 +1,6 @@
 package com.example.android.bakingapp;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.app.FragmentManager;
@@ -9,32 +10,35 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.android.bakingapp.Data.RecipeContract;
-import com.example.android.bakingapp.ui.RecipeStepsFragment;
+import com.example.android.bakingapp.Fragment.RecipeStepsFragment;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
-public class DetailActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity implements RecipeStepsFragment.OnStepsClickListener{
 
     // Get the URI as a string to pass in to bundle
     private static final String RECIPE_URI = "recipe_uri";
     private static final String[] RECIPE_PROJECTION = {
-            RecipeContract.RecipeTable.COL_NAME,
             RecipeContract.RecipeTable.COL_INGREDIENTS,
             RecipeContract.RecipeTable.COL_STEPS,
-            RecipeContract.RecipeTable.COL_SERVINGS,
     };
+    private static final String RECIPE_STEPS = "recipe_steps";
     private static Uri mUri;
 
-    public static final int INDEX_RECIPE_NAME = 0;
-    public static final int INDEX_INGREDIENTS = 1;
-    public static final int INDEX_STEPS = 2;
-    public static final int INDEX_SERVINGS = 3;
+    public static final int INDEX_INGREDIENTS = 0;
+    public static final int INDEX_STEPS = 1;
 
     private RecyclerView mRecipeIngredientsRv;
     private RecipeIngredientsAdapter mRecipeIngredientsAdapter;
     private JSONArray recipeIngredients;
 
-    private String rName, rIngredients, rSteps, rServings;
+    // Reference to data
+    private String rIngredients, rSteps;
+
+    // Two-pane to larger tablet screens
+    private boolean twoPane = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class DetailActivity extends AppCompatActivity {
 
         // If saved instance state is null query the database
         if(savedInstanceState == null) {
-            getRecipeIngredients();
+            getRecipeData();
         }
 
         // Create the adapter and set it to the recycler view
@@ -84,7 +88,7 @@ public class DetailActivity extends AppCompatActivity {
     /**
      * This method will query the database and grab the JSONArray of ingredients for adapter
      */
-    public void getRecipeIngredients() {
+    public void getRecipeData() {
         // Try grabbing the recipe ingredients with id
         try {
             Cursor cursor = getContentResolver().query(mUri,
@@ -97,14 +101,43 @@ public class DetailActivity extends AppCompatActivity {
             /*********************
              *   GRAB DATA HERE  *
              *********************/
-            rName = cursor.getString(INDEX_RECIPE_NAME);
             rIngredients = cursor.getString(INDEX_INGREDIENTS);
             rSteps = cursor.getString(INDEX_STEPS);
-            rServings = cursor.getString(INDEX_SERVINGS);
 
             recipeIngredients = new JSONArray(rIngredients);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStepSelected(int position) {
+
+        // Set the appropriate layout based on screen
+        if(twoPane) {
+
+        } else {
+
+            // Try Catch Block to grab JSONObject
+            try {
+
+                // Grab the clicked JSONObject from the rSteps
+                JSONArray stepArray = new JSONArray(rSteps);
+                JSONObject stepDetail = stepArray.getJSONObject(position);
+
+                // Put the data steps data into a Bundle to run Intent to RecipeStepsDetailActivity
+                Bundle bundle = new Bundle();
+                bundle.putString(RECIPE_STEPS, stepDetail.toString());
+
+                // Initiate Intent here
+                final Intent intent = new Intent(this, RecipeStepsDetailActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }

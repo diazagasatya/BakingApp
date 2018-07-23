@@ -28,7 +28,8 @@
             android:authorities="com.example.android.BakingApp"
             android:exported="false" />
 
-        <activity android:name=".DetailActivity"></activity>
+        <activity android:name=".DetailActivity" />
+        <activity android:name=".RecipeStepsDetailActivity"></activity>
     </application>
 
 </manifest>

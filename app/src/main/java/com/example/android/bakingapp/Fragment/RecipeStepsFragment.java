@@ -1,5 +1,6 @@
-package com.example.android.bakingapp.ui;
+package com.example.android.bakingapp.Fragment;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,25 +34,45 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepsAdapter.
     private static final String TAG = "master_list_fragment";
 
     public static final String[] RECIPE_PROJECTION = {
-            RecipeContract.RecipeTable.COL_NAME,
-            RecipeContract.RecipeTable.COL_INGREDIENTS,
             RecipeContract.RecipeTable.COL_STEPS,
-            RecipeContract.RecipeTable.COL_SERVINGS,
     };
 
-    public static final int INDEX_RECIPE_NAME = 0;
-    public static final int INDEX_INGREDIENTS = 1;
-    public static final int INDEX_STEPS = 2;
-    public static final int INDEX_SERVINGS = 3;
+    public static final int INDEX_STEPS = 0;
 
     public static final String SHORT_DESCRIPTION = "shortDescription";
 
-    private String rName, rIngredients, rSteps, rServings;
+    private String rSteps;
+
+    // Define a new interface, calls a method in the host activity named onStepsSelected
+    private OnStepsClickListener mCallback;
 
     /**
      * Mandatory Empty Constructor
      */
     public RecipeStepsFragment() {}
+
+    /**
+     * OnStepsClickListener interface, calls a method in the host activity named onStepSelected
+     */
+    public interface OnStepsClickListener {
+        void onStepSelected(int position);
+    }
+
+    /**
+     * Override onAttach to make sure that the container activity has implemented the callback
+     * @param context
+     */
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // Make sure the host activity implement the callback interface
+        try {
+            mCallback = (OnStepsClickListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " implement OnStepsClickListener");
+        }
+    }
 
     @Nullable
     @Override
@@ -61,7 +82,7 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepsAdapter.
         if(getArguments() != null) {
             mUri = Uri.parse(getArguments().getString(RECIPE_URI));
             // Debugging
-            Log.v(TAG, "Uri passed from detail activity " + mUri);
+            // Log.v(TAG, "Uri passed from detail activity " + mUri);
         }
 
         final View rootView = inflater.inflate(R.layout.fragment_recipe_steps_list, container, false);
@@ -110,10 +131,7 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepsAdapter.
             /*********************
              *   GRAB DATA HERE  *
              *********************/
-            rName = cursor.getString(INDEX_RECIPE_NAME);
-            rIngredients = cursor.getString(INDEX_INGREDIENTS);
             rSteps = cursor.getString(INDEX_STEPS);
-            rServings = cursor.getString(INDEX_SERVINGS);
 
             // Log.v(TAG, "Testing " + rName + rIngredients + rSteps + rServings);
 
@@ -131,8 +149,13 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepsAdapter.
 
     }
 
+    /**
+     * This function will call the interface on the callback to start new intent activity in the
+     * host activity.
+     * @param idNumber      Item Clicked
+     */
     @Override
     public void clickedRecipeSteps(int idNumber) {
-
+        mCallback.onStepSelected(idNumber);
     }
 }
