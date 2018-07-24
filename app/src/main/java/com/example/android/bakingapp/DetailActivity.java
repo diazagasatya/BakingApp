@@ -26,6 +26,9 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsFrag
     };
     private static final String RECIPE_STEPS = "recipe_steps";
     private static final String RECIPE_INGREDIENTS = "recipe_ingredients";
+    private static final String STEPS_POSITION = "steps_position";
+    private static final String RECIPE_STEPS_ARRAY = "steps_array";
+
     private static Uri mUri;
 
     public static final int INDEX_INGREDIENTS = 0;
@@ -155,6 +158,8 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsFrag
                 // Put the data steps data into a Bundle to run Intent to RecipeStepsDetailActivity
                 Bundle bundle = new Bundle();
                 bundle.putString(RECIPE_STEPS, stepDetail.toString());
+                bundle.putInt(STEPS_POSITION, position);
+                bundle.putString(RECIPE_STEPS_ARRAY, rSteps);
 
                 // Initiate Intent here
                 final Intent intent = new Intent(this, RecipeStepsDetailActivity.class);

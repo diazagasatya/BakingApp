@@ -146,7 +146,6 @@ public class SimpleExoPlayerFragment extends Fragment {
 
             // If it's only a rotation
             if(savedInstanceState != null) {
-                System.out.println("REACH HERE");
                 long position = savedInstanceState.getLong(PLAYBACK_POSITION);
                 // Prepare the simple player and set play when ready
                 mSimplePlayer.seekTo(position);
