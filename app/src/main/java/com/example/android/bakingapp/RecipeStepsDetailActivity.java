@@ -1,12 +1,19 @@
 package com.example.android.bakingapp;
 
+import android.app.Activity;
+import android.content.res.Configuration;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 
 import com.example.android.bakingapp.Fragment.NavigationStepsFragment;
 import com.example.android.bakingapp.Fragment.RecipeStepsDetailFragment;
 import com.example.android.bakingapp.Fragment.SimpleExoPlayerFragment;
+import com.google.android.exoplayer2.ui.SimpleExoPlayerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,15 +27,16 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
     private static final String RECIPE_STEPS_ARRAY = "steps_array";
 
     // Reference for buttons
-    private static final int PREVIOUS_BUTTON = -1;
     private static final int NEXT_BUTTON = 1;
     private static final String CURRENT_POSITION = "current_position";
     private static final String JSON_STRING = "json_string";
+    private static final String SIMPLE_EXO_PLAYER_POSITION = "simple_exo_player_position";
 
     // Steps array
     private JSONArray stepsArray;
     private int currentPosition;
     private String jsonString;
+    private SimpleExoPlayerFragment mSimpleExoPlayerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +44,9 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
 
         setContentView(R.layout.activity_recipe_steps_detail);
 
+        // If configuration changes or paused
         if(savedInstanceState != null) {
+
             // Grab JSON String
             jsonString = savedInstanceState.getString(JSON_STRING);
             // Grab the previous position
@@ -49,6 +59,45 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
 
             } catch (JSONException e) {
                 e.printStackTrace();
+            }
+
+            // Check if orientation is Landscape, if so replace fragment simpleExoPlayer
+            // To show full screen Simple Exo Player
+            if((getResources().getConfiguration().orientation)
+                    == Configuration.ORIENTATION_LANDSCAPE) {
+
+                // Set layout to landscape view to show fullscreen
+                setContentView(R.layout.activity_recipe_steps_landscape);
+
+                // Initialize Bundle with recipe steps
+                Bundle recipeSteps = new Bundle();
+
+                // If current position is 0
+                if(currentPosition == 0) {
+                    recipeSteps.putString(RECIPE_STEPS, getIntent().getStringExtra(RECIPE_STEPS));
+                } else {
+                    // Get the current recipe step
+                    try {
+                        recipeSteps.putString(RECIPE_STEPS,
+                                stepsArray.getJSONObject(currentPosition).toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                // Get video position
+                long videoPosition = savedInstanceState.getLong(SIMPLE_EXO_PLAYER_POSITION);
+
+                // Instantiate new simple exo player fragment
+                mSimpleExoPlayerFragment = new SimpleExoPlayerFragment();
+                mSimpleExoPlayerFragment.setArguments(recipeSteps);
+                mSimpleExoPlayerFragment.setVideoPosition(videoPosition);
+
+                // Being fragment transaction here
+                getSupportFragmentManager().beginTransaction()
+                        .add((R.id.landscape_exo_player_container),mSimpleExoPlayerFragment)
+                        .commit();
+                return;
             }
 
         } else {
@@ -81,13 +130,13 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
         bundle.putString(RECIPE_STEPS, stepDetail);
 
         // Media Exo Player Fragment starts here
-        SimpleExoPlayerFragment simpleExoPlayerFragment = new SimpleExoPlayerFragment();
-        simpleExoPlayerFragment.setArguments(bundle);
+        mSimpleExoPlayerFragment = new SimpleExoPlayerFragment();
+        mSimpleExoPlayerFragment.setArguments(bundle);
 
         // Begin transaction here
         FragmentManager mediaFragmentManager = getSupportFragmentManager();
         mediaFragmentManager.beginTransaction()
-                .add((R.id.media_player_container), simpleExoPlayerFragment)
+                .add((R.id.media_player_container), mSimpleExoPlayerFragment)
                 .commit();
 
         // Recipe Detail Fragment starts here
@@ -117,11 +166,18 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
 
     }
 
+    /**
+     * Configuration changes
+     * @param outState
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(CURRENT_POSITION, currentPosition);
         outState.putString(JSON_STRING, jsonString);
+        if(mSimpleExoPlayerFragment != null) {
+            outState.putLong(SIMPLE_EXO_PLAYER_POSITION, mSimpleExoPlayerFragment.getVideoPosition());
+        }
     }
 
     @Override
@@ -150,12 +206,12 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
             bundle.putString(RECIPE_STEPS, step.toString());
 
             // Replace the fragments for Media Player
-            SimpleExoPlayerFragment simpleExoPlayerFragment = new SimpleExoPlayerFragment();
-            simpleExoPlayerFragment.setArguments(bundle);
+            mSimpleExoPlayerFragment = new SimpleExoPlayerFragment();
+            mSimpleExoPlayerFragment.setArguments(bundle);
 
             // Begin transaction here
             getSupportFragmentManager().beginTransaction()
-                    .replace((R.id.media_player_container), simpleExoPlayerFragment)
+                    .replace((R.id.media_player_container), mSimpleExoPlayerFragment)
                     .commit();
 
             // Replace the Step Description

@@ -9,6 +9,8 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +47,9 @@ public class SimpleExoPlayerFragment extends Fragment {
     // Create an instance of SimpleExoPlayer and the View
     private SimpleExoPlayerView mExoPlayerView;
     private SimpleExoPlayer mSimplePlayer;
+    private PlaybackStateCompat.Builder mStateBuilder;
+    private MediaSessionCompat mMediaSessionCompat;
+    private long videoPosition = 0;
 
     @Nullable
     @Override
@@ -56,6 +61,9 @@ public class SimpleExoPlayerFragment extends Fragment {
             mRecipeDetail = getArguments().getString(RECIPE_STEPS);
             // Log.v(TAG, "step detail passed from detail activity " + stepDetail);
         }
+
+        // Initialize Media Sessions
+        mediaSessionInitializer();
 
         // Inflate the the layout of the fragment to rootview
         View rootView = inflater.inflate(R.layout.fragment_simple_exo_player,container,false);
@@ -100,12 +108,55 @@ public class SimpleExoPlayerFragment extends Fragment {
     }
 
     /**
-     * Make sure when the app is paused, stop the video
+     * Create Media Session to handle media functions outside the UI.
+     * Create the MediaSessionCompat object, set the flags for external clients.
+     * Set available actions you want to support, and start the session
      */
-    @Override
-    public void onPause() {
-        super.onPause();
-        mSimplePlayer.stop();
+    private void mediaSessionInitializer() {
+        mMediaSessionCompat = new MediaSessionCompat(getContext(), TAG);
+
+        // Set flags for external clients in a car and media buttons
+        mMediaSessionCompat.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS
+                | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        // Don't let external client restart the player when not in UI
+        mMediaSessionCompat.setMediaButtonReceiver(null);
+
+        // Set available actions to support outside UI
+        mStateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(PlaybackStateCompat.ACTION_PLAY |
+                PlaybackStateCompat.ACTION_PLAY_PAUSE |
+                PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS |
+                PlaybackStateCompat.ACTION_PLAY_PAUSE);
+
+        // Set the playback state for compat
+        mMediaSessionCompat.setPlaybackState(mStateBuilder.build());
+
+        // Handle callbacks from media controller
+        mMediaSessionCompat.setCallback(new SessionCallbacks());
+
+        // Start the Media Session since the activity is active
+        mMediaSessionCompat.setActive(true);
+    }
+
+    /**
+     * Override onPlay, onPause, and onSkipToPrevious()
+     */
+    private class SessionCallbacks extends MediaSessionCompat.Callback {
+        @Override
+        public void onPlay() {
+            mSimplePlayer.setPlayWhenReady(true);
+        }
+
+        @Override
+        public void onPause() {
+            mSimplePlayer.setPlayWhenReady(false);
+        }
+
+        @Override
+        public void onSkipToPrevious() {
+            mSimplePlayer.seekTo(0);
+        }
     }
 
     @Override
@@ -115,6 +166,7 @@ public class SimpleExoPlayerFragment extends Fragment {
         mSimplePlayer.release();
         mSimplePlayer = null;
     }
+
 
     /**
      * This function will initialize the exo player with trackSelector
@@ -150,6 +202,11 @@ public class SimpleExoPlayerFragment extends Fragment {
                 // Prepare the simple player and set play when ready
                 mSimplePlayer.seekTo(position);
                 mSimplePlayer.setPlayWhenReady(true);
+            } else {
+                if(videoPosition != 0) {
+                    mSimplePlayer.seekTo(videoPosition);
+                    mSimplePlayer.setPlayWhenReady(true);
+                }
             }
         }
 
@@ -163,5 +220,22 @@ public class SimpleExoPlayerFragment extends Fragment {
         super.onSaveInstanceState(outState);
         long playbackPosition = mSimplePlayer.getCurrentPosition();
         outState.putLong(PLAYBACK_POSITION, playbackPosition);
+        videoPosition = mSimplePlayer.getCurrentPosition();
+    }
+
+    /**
+     * Helper function to return the video position
+     * @return videoPosition
+     */
+    public long getVideoPosition() {
+        return videoPosition;
+    }
+
+    /**
+     * Helper function to return to the video position
+     * @param videoPosition
+     */
+    public void setVideoPosition(long videoPosition) {
+        this.videoPosition = videoPosition;
     }
 }
