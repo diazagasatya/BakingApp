@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.android.bakingapp.Fragment.RecipeStepsDetailFragment;
+import com.example.android.bakingapp.Fragment.SimpleExoPlayerFragment;
 
 public class RecipeStepsDetailActivity extends AppCompatActivity {
 
@@ -18,20 +19,29 @@ public class RecipeStepsDetailActivity extends AppCompatActivity {
         // Only create new fragments when there is no previously saved state
         if(savedInstanceState == null) {
 
-            // TODO(1) Create EXO Media Player Here
-
-            // Create new Recipe Fragment
-            RecipeStepsDetailFragment recipeStepsDetailFragment = new RecipeStepsDetailFragment();
-
-            // Create a bundle to send recipe steps data
+            // Create a bundle to send recipe steps data for exo and description
             Bundle bundle = new Bundle();
             bundle.putString(RECIPE_STEPS, getIntent().getStringExtra(RECIPE_STEPS));
+
+            // Media Exo Player Fragment starts here
+            SimpleExoPlayerFragment simpleExoPlayerFragment = new SimpleExoPlayerFragment();
+            simpleExoPlayerFragment.setArguments(bundle);
+
+            // Begin transaction here
+            FragmentManager mediaFragmentManager = getSupportFragmentManager();
+            mediaFragmentManager.beginTransaction()
+                    .add((R.id.media_player_container), simpleExoPlayerFragment)
+                    .commit();
+
+            // Recipe Detail Fragment starts here
+            // Create new Recipe Fragment
+            RecipeStepsDetailFragment recipeStepsDetailFragment = new RecipeStepsDetailFragment();
             recipeStepsDetailFragment.setArguments(bundle);
 
             // Use FragmentManager and transaction to add the fragment to the screen
-            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentManager recipeFragmentManager = getSupportFragmentManager();
             // Fragment transaction
-            fragmentManager.beginTransaction()
+            recipeFragmentManager.beginTransaction()
                     .add((R.id.recipe_steps_instruction_container), recipeStepsDetailFragment)
                     .commit();
         }

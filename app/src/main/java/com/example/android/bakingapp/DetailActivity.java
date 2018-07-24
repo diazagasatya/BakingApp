@@ -25,6 +25,7 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsFrag
             RecipeContract.RecipeTable.COL_STEPS,
     };
     private static final String RECIPE_STEPS = "recipe_steps";
+    private static final String RECIPE_INGREDIENTS = "recipe_ingredients";
     private static Uri mUri;
 
     public static final int INDEX_INGREDIENTS = 0;
@@ -62,8 +63,17 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsFrag
         // If saved instance state is null query the database
         if(savedInstanceState == null) {
             getRecipeData();
+        } else {
+            String ingredients = savedInstanceState.getString(RECIPE_INGREDIENTS);
+            try {
+                recipeIngredients = new JSONArray(ingredients);
+                rSteps = savedInstanceState.getString(RECIPE_STEPS);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
+        // Fragment for recipe steps starts here
         // Create the adapter and set it to the recycler view
         mRecipeIngredientsAdapter = new RecipeIngredientsAdapter(this,recipeIngredients);
         mRecipeIngredientsRv.setAdapter(mRecipeIngredientsAdapter);
@@ -105,11 +115,28 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsFrag
             rSteps = cursor.getString(INDEX_STEPS);
 
             recipeIngredients = new JSONArray(rIngredients);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     *  Save the recipe data for configuration changes
+     * @param outState
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(RECIPE_INGREDIENTS, recipeIngredients.toString());
+        outState.putString(RECIPE_STEPS, rSteps);
+    }
+
+    /**
+     * This function will grab the recipe steps JSON data and pass it appropriately
+     * depending on phone screen sizes.
+     * @param position
+     */
     @Override
     public void onStepSelected(int position) {
 

@@ -25,13 +25,13 @@ import java.util.ArrayList;
 
 public class RecipeStepsFragment extends Fragment implements RecipeStepsAdapter.RecipeStepsAdapterOnClickHandler{
 
+    private static final String DESCRIPTION_LIST = "short_description_list";
     private RecyclerView mRecipeStepsRv;
     private RecipeStepsAdapter mRecipeStepsAdapter;
     private Uri mUri;
     private ArrayList<String> recipeShortDesc;
 
     private static final String RECIPE_URI = "recipe_uri";
-    private static final String TAG = "master_list_fragment";
 
     public static final String[] RECIPE_PROJECTION = {
             RecipeContract.RecipeTable.COL_STEPS,
@@ -98,6 +98,8 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepsAdapter.
         // Query the appropriate recipe and parse the steps and ingredients
         if(savedInstanceState == null) {
             getRecipeSteps();
+        } else {
+            recipeShortDesc = savedInstanceState.getStringArrayList(DESCRIPTION_LIST);
         }
 
         // Create the adapter and set it to the recycler view
@@ -106,6 +108,16 @@ public class RecipeStepsFragment extends Fragment implements RecipeStepsAdapter.
 
         return rootView;
 
+    }
+
+    /**
+     * Save the shortDescription Arraylist for rotation changes
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList(DESCRIPTION_LIST, recipeShortDesc);
     }
 
     /**

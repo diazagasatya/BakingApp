@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity
             RecipeAdapter.RecipeAdapterOnClickHandler {
 
     private static final String TAG = "main_activity";
+    private static final String ORIENTATION_CHANGE = "orientation_change";
 
     // Initialize references
     private RecyclerView mRecyclerView;
@@ -48,15 +49,21 @@ public class MainActivity extends AppCompatActivity
         // Initialize the appropriate screen layout
         if(findViewById(R.id.rv_recipe_cards) != null) {
             // This means we are running in phone screen size
-            phoneScreenLayoutAdapter();
+            phoneScreenLayoutAdapter(savedInstanceState);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(ORIENTATION_CHANGE, "true");
     }
 
     /**
      * This method will initialize the layout for phone screen size
      * and set the adapter to the recycler view to populate the recipe cards.
      */
-    private void phoneScreenLayoutAdapter() {
+    private void phoneScreenLayoutAdapter(Bundle savedInstancedState) {
         // Reference the correct recycler view layout
         mRecyclerView = findViewById(R.id.rv_recipe_cards);
 
@@ -66,7 +73,7 @@ public class MainActivity extends AppCompatActivity
         // Set the layout of the Recycler View
         mRecyclerView.setLayoutManager(linearLayoutManager);
 
-        // Will not change the child layout of the Reycler View
+        // Will not change the child layout of the Recycler View
         mRecyclerView.setHasFixedSize(true);
 
         // Instantiate Adapter
@@ -77,7 +84,10 @@ public class MainActivity extends AppCompatActivity
 
         getSupportLoaderManager().initLoader(ID_RECIPE_LOADER, null, this);
 
-        RecipesSyncTask.syncRecipes(this);
+        // Sync with the JSON if null
+        if(savedInstancedState == null) {
+            RecipesSyncTask.syncRecipes(this);
+        }
     }
 
     /**

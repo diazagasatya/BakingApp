@@ -22,8 +22,6 @@ public class RecipeStepsDetailFragment extends Fragment {
     private static final String TAG = "recipe_detail_frag";
 
     private static final String DESCRIPTION = "description";
-    private static final String VIDEO_URL = "videoURL";
-    private static final String THUMBNAIL_URL = "thumbnailURL";
 
     private String stepDetail;
 
@@ -40,7 +38,7 @@ public class RecipeStepsDetailFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(getArguments() != null) {
             stepDetail = getArguments().getString(RECIPE_STEPS);
-            Log.v(TAG, "step detail passed from detail activity " + stepDetail);
+            // Log.v(TAG, "step detail passed from detail activity " + stepDetail);
         }
 
         final View rootView = inflater.inflate(R.layout.fragment_recipe_instruction, container, false);
