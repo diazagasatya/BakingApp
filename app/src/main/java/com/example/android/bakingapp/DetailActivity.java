@@ -16,6 +16,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class DetailActivity extends AppCompatActivity implements RecipeStepsFragment.OnStepsClickListener{
 
     // Get the URI as a string to pass in to bundle

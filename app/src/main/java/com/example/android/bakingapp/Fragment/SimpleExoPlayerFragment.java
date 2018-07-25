@@ -1,7 +1,9 @@
 package com.example.android.bakingapp.Fragment;
 
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.GradientDrawable;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.RecipeStepsDetailActivity;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
@@ -139,6 +142,7 @@ public class SimpleExoPlayerFragment extends Fragment {
         mMediaSessionCompat.setActive(true);
     }
 
+
     /**
      * Override onPlay, onPause, and onSkipToPrevious()
      */
@@ -165,8 +169,14 @@ public class SimpleExoPlayerFragment extends Fragment {
         mSimplePlayer.stop();
         mSimplePlayer.release();
         mSimplePlayer = null;
+        mMediaSessionCompat.setActive(false);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSimplePlayer.setPlayWhenReady(false);
+    }
 
     /**
      * This function will initialize the exo player with trackSelector
@@ -208,8 +218,13 @@ public class SimpleExoPlayerFragment extends Fragment {
                     mSimplePlayer.setPlayWhenReady(true);
                 }
             }
-        }
 
+            // If orientation is Landscape Play
+            if(getResources().getConfiguration().orientation
+                    == Configuration.ORIENTATION_LANDSCAPE) {
+                mSimplePlayer.setPlayWhenReady(true);
+            }
+        }
     }
     /**
      * Handle rotation here and saving playback position

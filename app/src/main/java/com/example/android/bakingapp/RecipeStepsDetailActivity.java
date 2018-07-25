@@ -1,6 +1,7 @@
 package com.example.android.bakingapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Parcel;
@@ -61,50 +62,30 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
                 e.printStackTrace();
             }
 
-            // Check if orientation is Landscape, if so replace fragment simpleExoPlayer
-            // To show full screen Simple Exo Player
+            // Check if orientation is Landscape, if so start FullScreenActivity
             if((getResources().getConfiguration().orientation)
                     == Configuration.ORIENTATION_LANDSCAPE) {
 
-                // Set layout to landscape view to show fullscreen
-                setContentView(R.layout.activity_recipe_steps_landscape);
+                // Start full activity intent here
+                Intent fcActivityIntent = new Intent(this, FullScreenActivity.class);
+                fcActivityIntent.putExtra(JSON_STRING, jsonString);
+                fcActivityIntent.putExtra(CURRENT_POSITION,currentPosition);
+                fcActivityIntent.putExtra(SIMPLE_EXO_PLAYER_POSITION,
+                        savedInstanceState.getLong(SIMPLE_EXO_PLAYER_POSITION));
+                fcActivityIntent.putExtra(STEPS_POSITION, currentPosition);
 
-                // Initialize Bundle with recipe steps
-                Bundle recipeSteps = new Bundle();
-
-                // If current position is 0
-                if(currentPosition == 0) {
-                    recipeSteps.putString(RECIPE_STEPS, getIntent().getStringExtra(RECIPE_STEPS));
-                } else {
-                    // Get the current recipe step
-                    try {
-                        recipeSteps.putString(RECIPE_STEPS,
-                                stepsArray.getJSONObject(currentPosition).toString());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                // Get video position
-                long videoPosition = savedInstanceState.getLong(SIMPLE_EXO_PLAYER_POSITION);
-
-                // Instantiate new simple exo player fragment
-                mSimpleExoPlayerFragment = new SimpleExoPlayerFragment();
-                mSimpleExoPlayerFragment.setArguments(recipeSteps);
-                mSimpleExoPlayerFragment.setVideoPosition(videoPosition);
-
-                // Being fragment transaction here
-                getSupportFragmentManager().beginTransaction()
-                        .add((R.id.landscape_exo_player_container),mSimpleExoPlayerFragment)
-                        .commit();
-                return;
+                // Start Intent Here
+                startActivity(fcActivityIntent);
             }
 
         } else {
 
+            // Get video position if any
+            long videoPosition = getIntent().getLongExtra(SIMPLE_EXO_PLAYER_POSITION,0);
+
             // Initialize the fragments with the passed in intent
             initializeFragments(getIntent().getIntExtra(STEPS_POSITION,-1),
-                    getIntent().getStringExtra(RECIPE_STEPS));
+                    getIntent().getStringExtra(RECIPE_STEPS), videoPosition);
 
             // Get the Steps Array & position of the current step
             try {
@@ -116,6 +97,7 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
             }
             currentPosition = getIntent().getIntExtra(STEPS_POSITION, -1);
         }
+
     }
 
     /**
@@ -123,7 +105,7 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
      * @param recipeStepsPosition           Current Position
      * @param stepDetail                    Step Detail
      */
-    public void initializeFragments(int recipeStepsPosition, String stepDetail) {
+    public void initializeFragments(int recipeStepsPosition, String stepDetail, long videoPosition) {
 
         // Create a bundle to send recipe steps data for exo and description
         Bundle bundle = new Bundle();
@@ -132,6 +114,7 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
         // Media Exo Player Fragment starts here
         mSimpleExoPlayerFragment = new SimpleExoPlayerFragment();
         mSimpleExoPlayerFragment.setArguments(bundle);
+        mSimpleExoPlayerFragment.setVideoPosition(videoPosition);
 
         // Begin transaction here
         FragmentManager mediaFragmentManager = getSupportFragmentManager();
@@ -163,7 +146,6 @@ public class RecipeStepsDetailActivity extends AppCompatActivity implements Navi
         navFragManager.beginTransaction()
                 .add((R.id.previous_or_next_container), navStepsFragment)
                 .commit();
-
     }
 
     /**

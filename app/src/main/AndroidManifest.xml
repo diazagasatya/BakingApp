@@ -27,9 +27,10 @@
             android:name=".Data.RecipeProvider"
             android:authorities="com.example.android.BakingApp"
             android:exported="false" />
+
         <activity android:name=".DetailActivity" />
-        <activity android:name=".RecipeStepsDetailActivity">
-        </activity>
+        <activity android:name=".RecipeStepsDetailActivity"></activity>
+        <activity android:name=".FullScreenActivity"></activity>
     </application>
 
 </manifest>
