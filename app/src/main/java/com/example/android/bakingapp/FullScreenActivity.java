@@ -76,6 +76,10 @@ public class FullScreenActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Save outstate needed for configuration changes / onResume()
+     * @param outState          Bundle
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
