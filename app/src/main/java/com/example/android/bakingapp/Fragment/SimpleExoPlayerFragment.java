@@ -175,7 +175,9 @@ public class SimpleExoPlayerFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        mSimplePlayer.setPlayWhenReady(false);
+        if(mSimplePlayer != null) {
+            mSimplePlayer.setPlayWhenReady(false);
+        }
     }
 
     /**

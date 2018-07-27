@@ -52,6 +52,7 @@
             android:gravity="center"
             android:padding="4dp"
             android:textStyle="bold"/>
+
         <!-- Recipe Steps Recycler View To Hold Fragments -->
         <View
             android:layout_width="match_parent"

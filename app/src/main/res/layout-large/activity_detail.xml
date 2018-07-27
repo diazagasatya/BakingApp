@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Left Layout -->
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight=".4"
+        tools:context=".DetailActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Recipe Ingredients Title -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/lightGrey"></View>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_ingredients_label"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textStyle="bold"/>
+            <!-- Recipe Steps Recycler View To Hold Fragments -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/lightGrey"></View>
+
+            <!-- Recipe Ingredients -->
+            <android.support.v7.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/rv_recipe_ingredients"
+                android:orientation="vertical">
+            </android.support.v7.widget.RecyclerView>
+
+            <!-- Recipe Steps Title -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/lightGrey"></View>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/recipe_steps_label"
+                android:textSize="30sp"
+                android:gravity="center"
+                android:padding="4dp"
+                android:textStyle="bold"/>
+
+            <!-- Recipe Steps Recycler View To Hold Fragments -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/lightGrey"></View>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recipe_steps_container">
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!-- Right Layout -->
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight=".6"
+        tools:context=".RecipeStepsDetailActivity"
+        android:padding="12dp"
+        android:background="@color/lightGrey"
+        android:id="@+id/recipe_detail_layout">
+
+        <!-- Holds Media Player, Recipe Step Instruction, Nav -->
+        <!-- Media Player Container -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".5"
+            android:id="@+id/media_player_container"
+            android:background="@color/white">
+        </FrameLayout>
+
+        <!-- Recipe Instruction Container -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".35"
+            android:id="@+id/recipe_steps_instruction_container"
+            android:background="@color/white">
+        </FrameLayout>
+
+        <!-- Navigation Container -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".15"
+            android:id="@+id/previous_or_next_container"
+            android:background="@color/white">
+        </FrameLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
