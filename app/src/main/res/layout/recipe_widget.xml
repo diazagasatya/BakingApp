@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Will hold the text of recipe & servings -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="vertical"
+        android:id="@+id/recipe_widget"
+        android:padding="10dp">
+
+        <!-- Recipe Name -->
+        <TextView
+            android:id="@+id/tv_recipe_name_widget"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".6"
+            android:gravity="center"
+            android:text="@string/recipe_name"
+            android:textSize="20sp"
+            style="@style/Base.TextAppearance.AppCompat.Title"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".3"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <!-- Serving Label & Size -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/serving_label"
+                android:gravity="center"
+                android:padding="2dp"
+                android:textStyle="italic"/>
+            <TextView
+                android:id="@+id/tv_servings_widget"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/serving_size"
+                android:gravity="center"
+                android:textStyle="italic"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

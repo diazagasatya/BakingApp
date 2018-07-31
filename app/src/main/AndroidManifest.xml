@@ -22,15 +22,28 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".ListWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
         <!-- Register the custom RecipeProvider -->
         <provider
             android:name=".Data.RecipeProvider"
             android:authorities="com.example.android.BakingApp"
-            android:exported="false" />
+            android:exported="true" />
 
         <activity android:name=".DetailActivity" />
-        <activity android:name=".RecipeStepsDetailActivity"></activity>
-        <activity android:name=".FullScreenActivity"></activity>
+        <activity android:name=".RecipeStepsDetailActivity" />
+        <activity android:name=".FullScreenActivity" />
+
+        <receiver android:name=".BakingAppWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/baking_app_widget_provider_info" />
+        </receiver>
     </application>
 
 </manifest>

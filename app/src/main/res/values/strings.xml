@@ -11,4 +11,7 @@
     <string name="recipe_quantity">20</string>
     <string name="recipe_instruction">Whisk together the egg whites and remaining 300 grams (1.5 cups) of sugar in the bowl of a stand mixer until combined. Set the bowl over the top of the boiling water and continue whisking the egg white mixture until it feels hot to the touch and the sugar is totally dissolved (if you have a reliable thermometer, it should read 150\\u00b0F).</string>
     <string name="instruction_label">Instruction</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="no_recipe">No Recipe</string>
 </resources>
