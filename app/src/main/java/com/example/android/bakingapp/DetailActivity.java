@@ -349,4 +349,6 @@ public class DetailActivity extends AppCompatActivity implements RecipeStepsFrag
             e.printStackTrace();
         }
     }
+
+
 }
